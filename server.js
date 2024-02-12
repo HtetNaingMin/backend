@@ -48,7 +48,8 @@
       store: new SQLiteStore(),
       secret: secretKey,
       resave: false,
-      saveUninitialized: true, // Adjust the maxAge to a larger value in milliseconds
+      saveUninitialized: true,
+      cookie: { maxAge: null }, // Adjust the maxAge to a larger value in milliseconds
     })
   );
 
