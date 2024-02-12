@@ -113,7 +113,6 @@
     }
   });
 
- res.header('Access-Control-Allow-Credentials', true);
 
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
