@@ -49,7 +49,11 @@
       secret: secretKey,
       resave: false,
       saveUninitialized: true,
-      cookie: { maxAge: null }, // Adjust the maxAge to a larger value in milliseconds
+      cookie: {
+        maxAge: null,
+        sameSite: 'None', // Set SameSite=None for cross-origin cookies
+        secure: true,     // Ensure that the cookie is only sent over HTTPS
+      }, // Adjust the maxAge to a larger value in milliseconds
     })
   );
 
