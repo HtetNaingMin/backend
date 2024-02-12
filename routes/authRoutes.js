@@ -33,13 +33,13 @@ module.exports = (isAuthenticated) => {
   router.post('/login', (req, res) => {
     const { username, password } = req.body;
     const query = 'SELECT * FROM User WHERE Username = ? AND password = ?';
+  
     db.get(query, [username, password], (err, user) => {
       if (err) {
         console.error('Database query error:', err.message);
         res.status(500).json({ error: 'Internal Server Error' });
         return;
       }
-
   
       if (user) {
         console.log('User:', user);
@@ -53,11 +53,11 @@ module.exports = (isAuthenticated) => {
               res.status(500).json({ error: 'Internal Server Error' });
               return;
             }
-        
+  
             if (nutritionistData && nutritionistData.Status === 'approved') {
               console.log('Login successful for approved nutritionist');
-              req.session.userId = user.UserID;
-              res.json({ message: 'Login successful', user, userType: 'nutritionist', status: 'approved' });
+              req.session.user = { ...user, userType: 'nutritionist', status: 'approved' };
+              res.json({ message: 'Login successful', user: req.session.user });
             } else if (nutritionistData && nutritionistData.Status !== 'approved') {
               console.log('Nutritionist account is pending approval');
               res.status(401).json({ error: 'Nutritionist account is pending approval' });
@@ -68,22 +68,20 @@ module.exports = (isAuthenticated) => {
           });
         } else if (user.UserType === 'system admin') {
           console.log('Login successful for system admin');
-          req.session.userId = user.UserID;
-          res.json({ message: 'Login successful', user, userType: 'system admin' });
+          req.session.user = { ...user, userType: 'system admin' };
+          res.json({ message: 'Login successful', user: req.session.user });
         } else {
           console.log('Login successful for non-nutritionist user');
           // For non-nutritionist users, proceed with login
-          req.session.userId = user.UserID;
-          res.json({ message: 'Login successful', user,userType: 'user' });
+          req.session.user = { ...user, userType: 'user' };
+          res.json({ message: 'Login successful', user: req.session.user });
         }
       } else {
         console.log('Invalid credentials');
         res.status(401).json({ error: 'Invalid credentials' });
       }
-      
     });
   });
-  
   
 
   // Route for user logout
