@@ -33,6 +33,21 @@
   const crypto = require("crypto");
   const secretKey = crypto.randomBytes(32).toString("hex");
 
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://fyp-webapp-six.vercel.app');
+    res.header('Access-Control-Allow-Credentials', true);
+    // Other headers...
+  
+    if (req.method === 'OPTIONS') {
+      // Handle preflight requests
+      res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      res.status(200).end();
+    } else {
+      next();
+    }
+  });
+  
   app.use(
     cors({
       origin: "https://fyp-webapp-six.vercel.app", // Adjust this to your actual Next.js app origin
