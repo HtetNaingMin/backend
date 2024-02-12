@@ -26,7 +26,7 @@
   const db = require("./db"); // Import the database module
   const session = require("express-session");
   const multer = require("multer");
-
+  const SQLiteStore = require('connect-sqlite3')(session);
 
   const app = express();
   const PORT = process.env.PORT || 3001;
@@ -45,10 +45,10 @@
 
   app.use(
     session({
+      store: new SQLiteStore(),
       secret: secretKey,
       resave: false,
-      saveUninitialized: true,
-      cookie: { maxAge: null }, // Adjust the maxAge to a larger value in milliseconds
+      saveUninitialized: true, // Adjust the maxAge to a larger value in milliseconds
     })
   );
 
