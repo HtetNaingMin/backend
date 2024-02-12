@@ -104,6 +104,7 @@
     "concat-map": "^0.0.1",
     "concat-stream": "^1.6.2",
     "connect": "^3.7.0",
+    "connect-sqlite3": "^0.9.13",
     "console-control-strings": "^1.1.0",
     "content-disposition": "^0.5.4",
     "content-type": "^1.0.5",
