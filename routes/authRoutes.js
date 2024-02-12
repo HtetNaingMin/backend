@@ -64,6 +64,7 @@ module.exports = (isAuthenticated) => {
                             httpOnly: false,
                             secure: process.env.NODE_ENV === 'production', // Set to true if using HTTPS in production
                             sameSite: 'None', // Required for cross-site cookies
+                            domain: '.vercel.app',
                         });
                         res.json({ message: 'Login successful', user, userType: 'nutritionist', status: 'approved' });
                     } else if (nutritionistData && nutritionistData.Status !== 'approved') {
@@ -82,6 +83,7 @@ module.exports = (isAuthenticated) => {
                     httpOnly: false,
                     secure: process.env.NODE_ENV === 'production', // Set to true if using HTTPS in production
                     sameSite: 'None', // Required for cross-site cookies
+                    domain: '.vercel.app',
                 });
                 res.json({ message: 'Login successful', user, userType: 'system admin' });
             } else {
@@ -93,6 +95,7 @@ module.exports = (isAuthenticated) => {
                     httpOnly: false,
                     secure: process.env.NODE_ENV === 'production', // Set to true if using HTTPS in production
                     sameSite: 'None', // Required for cross-site cookies
+                    domain: '.vercel.app',
                 });
                 res.json({ message: 'Login successful', user, userType: 'user' });
             }
