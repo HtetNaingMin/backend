@@ -7,9 +7,26 @@ const crypto = require('crypto');
 // Middleware to check if the user is authenticated
 module.exports = (isAuthenticated) => {
   // Route to check if the user is authenticated
-  router.get('/check-auth', isAuthenticated, (req, res) => {
-    console.log("hiii reached check auth");
-    res.status(200).json({ message: 'Authenticated' });
+  router.get("/api/check-auth", isAuthenticated, (req, res) => {
+    try {
+      const currentTime = Date.now();
+      const sessionExpiry = req.session.cookie.expires.getTime();
+  
+      if (currentTime > sessionExpiry) {
+        // Session has expired
+        res.status(401).json({ error: "Session Expired" });
+        return;
+      }
+  
+      // Your authentication logic here
+  
+      // If authenticated, return the appropriate response
+      // If not authenticated, consider throwing an error
+      // res.status(401).json({ error: "Unauthorized" });
+    } catch (error) {
+      console.error("Error in /api/check-auth route:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
   });
 
   // Route for user login
