@@ -8,6 +8,7 @@ const crypto = require('crypto');
 module.exports = (isAuthenticated) => {
   // Route to check if the user is authenticated
   router.get('/check-auth', isAuthenticated, (req, res) => {
+    console.log("hiii reached check auth");
     res.status(200).json({ message: 'Authenticated' });
   });
 
