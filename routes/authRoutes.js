@@ -61,7 +61,7 @@ module.exports = (isAuthenticated) => {
                         req.session.userId = user.UserID;
                         res.cookie('connect.sid', req.sessionID, {
                             maxAge: null,/* set your desired max age in milliseconds */
-                            httpOnly: true,
+                            httpOnly: false,
                             secure: process.env.NODE_ENV === 'production', // Set to true if using HTTPS in production
                             sameSite: 'None', // Required for cross-site cookies
                         });
@@ -79,7 +79,7 @@ module.exports = (isAuthenticated) => {
                 req.session.userId = user.UserID;
                 res.cookie('connect.sid', req.sessionID, {
                     maxAge: null,/* set your desired max age in milliseconds */
-                    httpOnly: true,
+                    httpOnly: false,
                     secure: process.env.NODE_ENV === 'production', // Set to true if using HTTPS in production
                     sameSite: 'None', // Required for cross-site cookies
                 });
@@ -90,7 +90,7 @@ module.exports = (isAuthenticated) => {
                 req.session.userId = user.UserID;
                 res.cookie('connect.sid', req.sessionID, {
                     maxAge: null,/* set your desired max age in milliseconds */
-                    httpOnly: true,
+                    httpOnly: false,
                     secure: process.env.NODE_ENV === 'production', // Set to true if using HTTPS in production
                     sameSite: 'None', // Required for cross-site cookies
                 });
