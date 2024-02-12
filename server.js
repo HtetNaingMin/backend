@@ -34,7 +34,7 @@
   const secretKey = crypto.randomBytes(32).toString("hex");
 
   app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://fyp-webapp-six.vercel.app/');
+    res.header('Access-Control-Allow-Origin', 'https://fyp-webapp-six.vercel.app');
     res.header('Access-Control-Allow-Credentials', true);
     // Other headers...
   
@@ -50,7 +50,7 @@
 
   app.use(
     cors({
-      origin: "https://fyp-webapp-six.vercel.app/", // Adjust this to your actual Next.js app origin
+      origin: "https://fyp-webapp-six.vercel.app", // Adjust this to your actual Next.js app origin
       methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
       optionsSuccessStatus: 204,
       credentials: true,
