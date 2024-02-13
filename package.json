@@ -338,6 +338,7 @@
     "json-stable-stringify-without-jsonify": "^1.0.1",
     "json5": "^1.0.2",
     "jsonfile": "^4.0.0",
+    "jsonwebtoken": "^9.0.2",
     "jsx-ast-utils": "^3.3.5",
     "keyv": "^4.5.4",
     "kind-of": "^6.0.3",
