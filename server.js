@@ -43,19 +43,19 @@ app.use(
   })
 );
 
-app.use(
-  session({
-    store: new SQLiteStore(),
-    secret: secretKey,
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      maxAge: null,
-      sameSite: 'None', 
-      secure: true,// Set SameSite=None for cross-origin cookies     // Ensure that the cookie is only sent over HTTPS
-    }, // Adjust the maxAge to a larger value in milliseconds
-  })
-);
+// app.use(
+//   session({
+//     store: new SQLiteStore(),
+//     secret: secretKey,
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: {
+//       maxAge: null,
+//       sameSite: 'None', 
+//       secure: true,// Set SameSite=None for cross-origin cookies     // Ensure that the cookie is only sent over HTTPS
+//     }, // Adjust the maxAge to a larger value in milliseconds
+//   })
+// );
 
 app.use(bodyParser.json());
 // Configure Multer for handling file uploads
