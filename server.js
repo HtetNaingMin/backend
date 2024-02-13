@@ -51,7 +51,8 @@ app.use(
     saveUninitialized: true,
     cookie: {
       maxAge: null,
-      sameSite: 'None', // Set SameSite=None for cross-origin cookies     // Ensure that the cookie is only sent over HTTPS
+      sameSite: 'None', 
+      secure: true,// Set SameSite=None for cross-origin cookies     // Ensure that the cookie is only sent over HTTPS
     }, // Adjust the maxAge to a larger value in milliseconds
   })
 );
