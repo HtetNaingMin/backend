@@ -28,10 +28,12 @@ const session = require("express-session");
 const multer = require("multer");
 const SQLiteStore = require('connect-sqlite3')(session);
 
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 const crypto = require("crypto");
 const secretKey = crypto.randomBytes(32).toString("hex");
+app.enable('trust proxy');
 
 app.use(
   cors({
@@ -39,22 +41,25 @@ app.use(
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     optionsSuccessStatus: 204,
     credentials: true,
-    allowedHeaders: "Content-Type, Authorization",
+    allowedHeaders: 'Authorization,Content-Type',
   })
 );
 
 app.use(
-  session({
-    store: new SQLiteStore(),
-    secret: secretKey,
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      maxAge: null,
-      sameSite: 'None', // Set SameSite=None for cross-origin cookies     // Ensure that the cookie is only sent over HTTPS
-    }, // Adjust the maxAge to a larger value in milliseconds
-  })
+session({
+  store: new SQLiteStore(),
+  secret: secretKey,
+  resave: false,
+  saveUninitialized: true,
+  proxy: true,
+  cookie: {
+    maxAge: null,
+    secure: true, // Ensure that the cookie is only sent over HTTPS
+    sameSite: 'None', // Set SameSite=None for cross-origin cookies
+  },
+})
 );
+
 
 app.use(bodyParser.json());
 // Configure Multer for handling file uploads
@@ -116,6 +121,7 @@ app.get("/api/healthy-videos", async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 
 app.listen(PORT, () => {

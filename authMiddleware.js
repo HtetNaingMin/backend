@@ -1,4 +1,5 @@
 // authMiddleware.js
+// authMiddleware.js
 const isAuthenticated = (req, res, next) => {
     if (req.session && req.session.userId) {
       req.userId = req.session.userId;
@@ -9,4 +10,6 @@ const isAuthenticated = (req, res, next) => {
   };
   
   module.exports = isAuthenticated;
+  
+
   
