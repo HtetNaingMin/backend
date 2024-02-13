@@ -9,23 +9,28 @@ const secretKey = 'yourLongLivedSecretKey';
 // Middleware to check if the user is authenticated
 module.exports = (isAuthenticated) => {
   // Route to check if the user is authenticated
-  router.get('/check-auth', (req, res) => {
+ const isAuthenticated = (req, res, next) => {
     // Get the token from the Authorization header
     const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
-
+  
     if (!token) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
-
+  
     try {
       // Verify the token
       const decoded = jwt.verify(token, secretKey);
       req.userId = decoded.userId; // Add userId to the request for further use
-      return isAuthenticated(req, res);
+      next();
     } catch (error) {
       console.error('JWT verification error:', error.message);
       return res.status(401).json({ error: 'Unauthorized' });
     }
+  };
+  
+  // Route to check if the user is authenticated
+  router.get('/check-auth', isAuthenticated, (req, res) => {
+    res.status(200).json({ message: 'Authenticated' });
   });
 
   // Route for user login
