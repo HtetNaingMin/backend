@@ -51,6 +51,7 @@
     secret: secretKey,
     resave: false,
     saveUninitialized: true,
+    proxy: true,
     cookie: {
       maxAge: null,
       secure: true, // Ensure that the cookie is only sent over HTTPS
