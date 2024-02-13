@@ -26,6 +26,7 @@
   const db = require("./db"); // Import the database module
   const session = require("express-session");
   const multer = require("multer");
+  const SQLiteStore = require('connect-sqlite3')(session);
 
 
   const app = express();
@@ -44,13 +45,19 @@
   );
 
   app.use(
-    session({
-      secret: secretKey,
-      resave: false,
-      saveUninitialized: true,
-      cookie: { maxAge: null }, // Adjust the maxAge to a larger value in milliseconds
-    })
-  );
+  session({
+    store: new SQLiteStore(),
+    secret: secretKey,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      maxAge: null,
+      secure: true, // Ensure that the cookie is only sent over HTTPS
+      sameSite: 'None', // Set SameSite=None for cross-origin cookies
+    },
+  })
+);
+
 
   app.use(bodyParser.json());
   // Configure Multer for handling file uploads
