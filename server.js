@@ -41,7 +41,7 @@
       methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
       optionsSuccessStatus: 204,
       credentials: true,
-      allowedHeaders: "Content-Type",
+      allowedHeaders: 'Authorization,Content-Type',
     })
   );
 
