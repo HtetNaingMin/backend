@@ -22,12 +22,10 @@ module.exports = (isAuthenticated) => {
         return;
       }
 
+  
       if (user) {
         console.log('User:', user);
-
-        // For simplicity, you can store the user details directly in the session
-        req.session.user = user;
-
+  
         if (user.UserType === 'nutritionist') {
           // Check NutritionistSignUp table for approval status
           const nutritionistQuery = 'SELECT * FROM NutritionistSignUp WHERE UserID = ?';
@@ -37,19 +35,10 @@ module.exports = (isAuthenticated) => {
               res.status(500).json({ error: 'Internal Server Error' });
               return;
             }
-
+        
             if (nutritionistData && nutritionistData.Status === 'approved') {
               console.log('Login successful for approved nutritionist');
               req.session.userId = user.UserID;
-
-              // Set a cookie upon successful login
-              res.cookie('sessionCookie', req.sessionID, {
-                maxAge:null,
-                httpOnly: false, // Adjust this based on your security requirement // Set to true if using HTTPS in production
-                sameSite: 'None', // Required for cross-site cookies
-                domain: '.vercel.app',
-              });
-
               res.json({ message: 'Login successful', user, userType: 'nutritionist', status: 'approved' });
             } else if (nutritionistData && nutritionistData.Status !== 'approved') {
               console.log('Nutritionist account is pending approval');
@@ -62,35 +51,18 @@ module.exports = (isAuthenticated) => {
         } else if (user.UserType === 'system admin') {
           console.log('Login successful for system admin');
           req.session.userId = user.UserID;
-
-          // Set a cookie upon successful login
-          res.cookie('sessionCookie', req.sessionID,{
-            maxAge: null,
-            httpOnly: false, // Adjust this based on your security requirement// Set to true if using HTTPS in production
-            sameSite: 'None', // Required for cross-site cookies
-            domain: '.vercel.app',
-          });
-
           res.json({ message: 'Login successful', user, userType: 'system admin' });
         } else {
           console.log('Login successful for non-nutritionist user');
           // For non-nutritionist users, proceed with login
           req.session.userId = user.UserID;
-
-          // Set a cookie upon successful login
-          res.cookie('sessionCookie', req.sessionID, {
-            maxAge: null,
-            httpOnly: false, // Adjust this based on your security requirements // Set to true if using HTTPS in production
-            sameSite: 'None', // Required for cross-site cookies
-            domain: '.vercel.app',
-          });
-
-          res.json({ message: 'Login successful', user, userType: 'user' });
+          res.json({ message: 'Login successful', user,userType: 'user' });
         }
       } else {
         console.log('Invalid credentials');
         res.status(401).json({ error: 'Invalid credentials' });
       }
+      
     });
   });
   
@@ -104,12 +76,6 @@ module.exports = (isAuthenticated) => {
         res.status(500).json({ error: 'Internal Server Error' });
         return;
       }
-
-      // Clear the cookie upon logout
-      res.clearCookie('sessionCookie', {
-        domain: '.vercel.app',
-      });
-
       res.json({ message: 'Logout successful' });
     });
   });
