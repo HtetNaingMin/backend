@@ -33,6 +33,7 @@
   const PORT = process.env.PORT || 3001;
   const crypto = require("crypto");
   const secretKey = crypto.randomBytes(32).toString("hex");
+  app.enable('trust proxy');
 
   app.use(
     cors({
