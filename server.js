@@ -50,7 +50,7 @@
 
   app.use(
     cors({
-      origin: "https://fyp-webapp-six.vercel.app", // Adjust this to your actual Next.js app origin
+      origin: "https://cleancookbook.vercel.app", // Adjust this to your actual Next.js app origin
       methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
       optionsSuccessStatus: 204,
       credentials: true,
