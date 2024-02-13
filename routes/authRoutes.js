@@ -4,7 +4,7 @@ const router = express.Router();
 const db = require('../db'); // Import your database module here
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-const secretKey = crypto.randomBytes(32).toString('hex');
+const secretKey = 'yourLongLivedSecretKey';
 
 // Middleware to check if the user is authenticated
 module.exports = (isAuthenticated) => {
