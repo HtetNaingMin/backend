@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db'); // Import your database module here
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 // Middleware to check if the user is authenticated
 module.exports = (isAuthenticated) => {
@@ -12,22 +13,25 @@ module.exports = (isAuthenticated) => {
   });
 
   // Route for user login
-   router.post('/login', (req, res) => {
+    router.post('/login', (req, res) => {
     const { username, password } = req.body;
     const query = 'SELECT * FROM User WHERE Username = ? AND password = ?';
+  
     db.get(query, [username, password], (err, user) => {
       if (err) {
         console.error('Database query error:', err.message);
         res.status(500).json({ error: 'Internal Server Error' });
         return;
       }
-
+  
       if (user) {
         console.log('User:', user);
-
-        // For simplicity, you can store the user details directly in the session
-        req.session.user = user;
-
+  
+        // Generate a JWT
+        const token = jwt.sign({ userId: user.UserID, userType: user.UserType },  secretKey, {
+          expiresIn: '1h', // Token expiration time
+        });
+  
         if (user.UserType === 'nutritionist') {
           // Check NutritionistSignUp table for approval status
           const nutritionistQuery = 'SELECT * FROM NutritionistSignUp WHERE UserID = ?';
@@ -37,20 +41,10 @@ module.exports = (isAuthenticated) => {
               res.status(500).json({ error: 'Internal Server Error' });
               return;
             }
-
+  
             if (nutritionistData && nutritionistData.Status === 'approved') {
               console.log('Login successful for approved nutritionist');
-              req.session.userId = user.UserID;
-
-              // Set a cookie upon successful login
-              res.cookie('sessionCookie', req.sessionID, {
-                maxAge: null,
-                httpOnly: false, // Adjust this based on your security requirements
-                secure: true, // Set to true if using HTTPS in production
-                sameSite: 'None', // Required for cross-site cookies
-              });
-
-              res.json({ message: 'Login successful', user, userType: 'nutritionist', status: 'approved' });
+              res.json({ message: 'Login successful', user, userType: 'nutritionist', status: 'approved', token });
             } else if (nutritionistData && nutritionistData.Status !== 'approved') {
               console.log('Nutritionist account is pending approval');
               res.status(401).json({ error: 'Nutritionist account is pending approval' });
@@ -61,31 +55,10 @@ module.exports = (isAuthenticated) => {
           });
         } else if (user.UserType === 'system admin') {
           console.log('Login successful for system admin');
-          req.session.userId = user.UserID;
-
-          // Set a cookie upon successful login
-          res.cookie('sessionCookie', req.sessionID, {
-            maxAge: null,
-            httpOnly: false, // Adjust this based on your security requirements
-            secure: true, // Set to true if using HTTPS in production
-            sameSite: 'None', // Required for cross-site cookies
-          });
-
-          res.json({ message: 'Login successful', user, userType: 'system admin' });
+          res.json({ message: 'Login successful', user, userType: 'system admin', token });
         } else {
           console.log('Login successful for non-nutritionist user');
-          // For non-nutritionist users, proceed with login
-          req.session.userId = user.UserID;
-
-          // Set a cookie upon successful login
-          res.cookie('sessionCookie', req.sessionID, {
-            maxAge:null,
-            httpOnly: false, // Adjust this based on your security requirements
-            secure: true, // Set to true if using HTTPS in production
-            sameSite: 'None', // Required for cross-site cookies
-          });
-
-          res.json({ message: 'Login successful', user, userType: 'user' });
+          res.json({ message: 'Login successful', user, userType: 'user', token });
         }
       } else {
         console.log('Invalid credentials');
@@ -93,22 +66,17 @@ module.exports = (isAuthenticated) => {
       }
     });
   });
-
   // Route for user logout
-  router.get('/logout', isAuthenticated, (req, res) => {
-    req.session.destroy((err) => {
-      if (err) {
-        console.error('Error destroying session:', err.message);
-        res.status(500).json({ error: 'Internal Server Error' });
-        return;
-      }
+ router.post('/logout', (req, res) => {
+  // Assuming you stored the token in a client-side storage (e.g., localStorage)
+  const token = req.body.token; // Adjust based on your setup
 
-      // Clear the cookie upon logout
-      res.clearCookie('sessionCookie');
+  if (!token) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
 
-      res.json({ message: 'Logout successful' });
-    });
-  });
+  res.json({ message: 'Logout successful' });
+});
 
   // Add this after the existing routes in authRoutes.js
 router.get('/userID', isAuthenticated, (req, res) => {
