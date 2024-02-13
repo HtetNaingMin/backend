@@ -31,7 +31,7 @@ const SQLiteStore = require('connect-sqlite3')(session);
 const app = express();
 const PORT = process.env.PORT || 3001;
 const crypto = require("crypto");
-const secretKey = crypto.randomBytes(32).toString("hex");
+// const secretKey = crypto.randomBytes(32).toString("hex");
 
 app.use(
   cors({
